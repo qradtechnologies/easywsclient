@@ -118,7 +118,8 @@ class _DummyWebSocket : public easywsclient::WebSocket
     void sendBinary(const std::string& message) { }
     void sendBinary(const std::vector<uint8_t>& message) { }
     void sendPing() { }
-    void close() { } 
+    void close() { }
+    int socket() { return -1; }
     readyStateValues getReadyState() const { return CLOSED; }
     void _dispatch(Callback_Imp & callable) { }
     void _dispatchBinary(BytesCallback_Imp& callable) { }
@@ -339,7 +340,7 @@ class _RealWebSocket : public easywsclient::WebSocket
             // We got a whole message, now do something with it:
             if (false) { }
             else if (
-                   ws.opcode == wsheader_type::TEXT_FRAME 
+                   ws.opcode == wsheader_type::TEXT_FRAME
                 || ws.opcode == wsheader_type::BINARY_FRAME
                 || ws.opcode == wsheader_type::CONTINUATION
             ) {
@@ -441,6 +442,8 @@ class _RealWebSocket : public easywsclient::WebSocket
             }
         }
     }
+
+    int socket(void) { return sockfd; }
 
     void close() {
         if(readyState == CLOSING || readyState == CLOSED) { return; }
